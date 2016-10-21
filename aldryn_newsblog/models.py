@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+from operator import attrgetter
+
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ImproperlyConfigured
@@ -483,7 +485,7 @@ class NewsBlogRelatedPlugin(PluginEditModeMixin, AdjustableCacheModelMixin,
         qs = article.related.translated(*languages)
         if not self.get_edit_mode(request):
             qs = qs.published()
-        return qs
+        return sorted(qs, key=attrgetter('publishing_date'), reverse=True)
 
     def __str__(self):
         return ugettext('Related articles')
